@@ -1,0 +1,84 @@
+CREATE DATABASE hotel;
+
+CREATE TYPE UserRole AS ENUM ('Customer', 'Manager', 'SuperAdmin');
+CREATE TYPE OrderStatus AS ENUM ('Pending', 'Preparing', 'Completed', 'Cancelled');
+
+CREATE TABLE IF NOT EXISTS IF NOT EXISTS Users (
+    UserID SERIAL PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PhoneNumber VARCHAR(15),
+    ProfilePicture VARCHAR(255),
+    Name VARCHAR(100),
+    Role UserRole NOT NULL DEFAULT 'Customer',
+    RestaurantName VARCHAR(100), -- Restaurant name, applicable only for managers
+    RestaurantID INT, -- Restaurant ID, applicable only for managers
+    prtkn VARCHAR(100),
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Restaurants (
+    RestaurantID SERIAL PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Address VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100),
+    OpeningHours VARCHAR(100),
+    photos VARCHAR[],
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Dishes (
+    DishID SERIAL PRIMARY KEY,
+    RestaurantID INT NOT NULL,
+    Name VARCHAR(100) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10, 2) NOT NULL,
+    ImageURL VARCHAR(255),
+    IsAvailable BOOLEAN DEFAULT TRUE,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Orders (
+    OrderID SERIAL PRIMARY KEY,
+    UserID INT NOT NULL,
+    RestaurantID INT NOT NULL,
+    OrderStatus OrderStatus DEFAULT 'Pending',
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS OrderItems (
+    OrderItemID SERIAL PRIMARY KEY,
+    OrderID INT NOT NULL,
+    DishID INT NOT NULL,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) ON DELETE CASCADE,
+    FOREIGN KEY (DishID) REFERENCES Dishes(DishID) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Reviews (
+    ReviewID SERIAL PRIMARY KEY,
+    UserID INT NOT NULL,
+    RestaurantID INT,
+    DishID INT,
+    Rating INT CHECK (Rating >= 1 AND Rating <= 5),
+    Comment TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID) ON DELETE CASCADE,
+    FOREIGN KEY (DishID) REFERENCES Dishes(DishID) ON DELETE CASCADE
+);
