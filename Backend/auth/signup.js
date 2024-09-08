@@ -1,11 +1,11 @@
 import { hash } from "bcrypt";
 import client from "../database/index.js";
-import { REG_EMAIL, REG_PASSWORD, REG_PHONE, REG_USERNAME } from "./common.js";
+import { REG_EMAIL, REG_PASSWORD, REG_PHONE } from "./common.js";
 
-export async function signup({ name, username, email, password, phoneNumber }) {
+export async function signup({ name, email, password, phoneNumber }) {
   try {
     const h =
-      [name, username, email, password, phoneNumber].filter(
+      [name, email, password, phoneNumber].filter(
         (e) => (e && e.trim().length <= 3) || !e
       ).length > 0;
 
@@ -13,14 +13,13 @@ export async function signup({ name, username, email, password, phoneNumber }) {
       h ||
       !REG_PASSWORD.test(password) ||
       !REG_EMAIL.test(email) ||
-      !REG_USERNAME.test(username) ||
       !REG_PHONE.test(phoneNumber)
     )
       return { err: "invalid", data: null };
     let passwordHash = await hash(password, 10);
     let result = await client.query(
-      "INSERT INTO Users(Name, Username, PasswordHash, Email, PhoneNumber) VALUES ($1, $2, $3, $4, $5) RETURNING UserID",
-      [name, username, passwordHash, email, phoneNumber]
+      "INSERT INTO Users(Name, PasswordHash, Email, PhoneNumber) VALUES ($1, $2, $3, $4) RETURNING UserID",
+      [name, passwordHash, email, phoneNumber]
     );
     if (result.rows.length) return { err: null, data: "success" };
   } catch (err) {
@@ -31,6 +30,8 @@ export async function signup({ name, username, email, password, phoneNumber }) {
         data: null,
       };
     }
+
+    console.log(err);
 
     return { err: null, data: null };
   }

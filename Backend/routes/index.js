@@ -12,6 +12,6 @@ router.get("/", (req, res) => {
 export default [
   { name: "/", router },
   { name: "/auth", router: authRouter },
-  { name: "/restaurants=", router: restaurantsRouter },
+  { name: "/restaurants", router: restaurantsRouter },
   { name: "/order", router: orderRouter },
 ];

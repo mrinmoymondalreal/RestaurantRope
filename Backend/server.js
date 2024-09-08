@@ -13,6 +13,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", ["http://192.168.0.103:5173"]);
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 routes.forEach(({ name, router }) => {
   app.use(name, router);
 });

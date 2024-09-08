@@ -20,7 +20,7 @@ router.get(
         res.locals.user.userid,
       ]);
       result = await client.query(
-        "INSERT INTO orders(userid, restaurantid, totalamount) VALUES ($1, $2, 0)",
+        "INSERT INTO orders(userid, restaurantid, totalamount) VALUES ($1, $2, 0) RETURNING orderid",
         [res.locals.user.userid, restaurantid]
       );
     }
@@ -104,14 +104,14 @@ router.get(
 
 router.get("/list", verifyUser("Customer", re("/")), async (req, res) => {
   let order_details = await client.query(
-    "SELECT * FROM orders WHERE userid = $1",
+    "SELECT orders.*, restaurants.name FROM orders JOIN restaurants ON restaurants.restaurantid = orders.restaurantid WHERE userid = $1",
     [res.locals.user.userid]
   );
 
   if (order_details.rows[0]) {
     let orderid = order_details.rows[0].orderid;
     let item_list = await client.query(
-      "SELECT * FROM orderitems WHERE orderid = $1",
+      "SELECT *, dishes.name FROM orderitems JOIN dishes ON dishes.dishid = orderitems.dishid WHERE orderid = $1",
       [orderid]
     );
 

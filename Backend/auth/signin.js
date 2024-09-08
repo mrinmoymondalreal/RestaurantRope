@@ -2,21 +2,21 @@ import { compare } from "bcrypt";
 import client from "../database/index.js";
 import jwt from "jsonwebtoken";
 
-export async function signin(username, password) {
+export async function signin(email, password) {
   try {
     let h = await client.query(
-      "SELECT userid, passwordhash FROM Users WHERE Email = $1 OR Username = $1 LIMIT 1",
-      [username]
+      "SELECT userid, passwordhash FROM Users WHERE Email = $1 LIMIT 1",
+      [email]
     );
     if (h.rows[0] && (await compare(password, h.rows[0].passwordhash))) {
-      let { username, email, phonenumber, name, role } = (
+      let { email, phonenumber, name, role } = (
         await client.query(
-          "SELECT username, email, phonenumber, name, role FROM Users WHERE userid = $1 LIMIT 1",
+          "SELECT email, phonenumber, name, role FROM Users WHERE userid = $1 LIMIT 1",
           [h.rows[0].userid]
         )
       ).rows[0];
       let token = jwt.sign(
-        { userid: h.rows[0].userid, username, email, phonenumber, name, role },
+        { userid: h.rows[0].userid, email, phonenumber, name, role },
         process.env.AUTH_SECRET,
         {
           expiresIn: 12 * 60,
@@ -66,18 +66,17 @@ export function verifyUser(role, callback) {
           req.cookies.prtkn
         );
         if (result instanceof Array) {
-          res.setHeader(
-            "set-cookie",
-            `authtoken=${result[0]};httpOnly;secure;path=/`
-          );
+          res.setHeader("set-cookie", `authtoken=${result[0]};httpOnly;path=/`);
           result = result[1];
         }
         res.locals.user = result;
         if (result.role != role) return callback(req, res);
         if (!result) return callback(req, res);
       } else return callback(req, res);
-      next();
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
+    next();
   };
 }
 

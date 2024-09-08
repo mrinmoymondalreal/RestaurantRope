@@ -5,7 +5,6 @@ CREATE TYPE OrderStatus AS ENUM ('Pending', 'Preparing', 'Completed', 'Cancelled
 
 CREATE TABLE IF NOT EXISTS IF NOT EXISTS Users (
     UserID SERIAL PRIMARY KEY,
-    Username VARCHAR(50) NOT NULL UNIQUE,
     PasswordHash VARCHAR(255) NOT NULL,
     Email VARCHAR(100) NOT NULL UNIQUE,
     PhoneNumber VARCHAR(15),
@@ -27,6 +26,9 @@ CREATE TABLE IF NOT EXISTS Restaurants (
     Email VARCHAR(100),
     OpeningHours VARCHAR(100),
     photos VARCHAR[],
+    city VARCHAR(100),
+    Description TEXT,
+    rating 
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -73,12 +75,10 @@ CREATE TABLE IF NOT EXISTS Reviews (
     ReviewID SERIAL PRIMARY KEY,
     UserID INT NOT NULL,
     RestaurantID INT,
-    DishID INT,
     Rating INT CHECK (Rating >= 1 AND Rating <= 5),
     Comment TEXT,
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
-    FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID) ON DELETE CASCADE,
-    FOREIGN KEY (DishID) REFERENCES Dishes(DishID) ON DELETE CASCADE
+    FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID) ON DELETE CASCADE
 );
