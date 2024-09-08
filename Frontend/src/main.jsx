@@ -10,6 +10,7 @@ import Cart from "./customer/Cart";
 import Order from "./customer/Order";
 import Login from "./customer/Login";
 import Signup from "./customer/Signup";
+import ManagerPage from "./manager/App";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/orders",
     element: <Order />,
+  },
+  {
+    path: "/manager",
+    element: <ManagerPage />,
   },
 ]);
 

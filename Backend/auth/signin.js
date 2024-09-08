@@ -9,14 +9,22 @@ export async function signin(email, password) {
       [email]
     );
     if (h.rows[0] && (await compare(password, h.rows[0].passwordhash))) {
-      let { email, phonenumber, name, role } = (
+      let { email, phonenumber, name, role, restaurantname, restaurantid } = (
         await client.query(
-          "SELECT email, phonenumber, name, role FROM Users WHERE userid = $1 LIMIT 1",
+          "SELECT email, phonenumber, name, role, restaurantname, restaurantid FROM Users WHERE userid = $1 LIMIT 1",
           [h.rows[0].userid]
         )
       ).rows[0];
       let token = jwt.sign(
-        { userid: h.rows[0].userid, email, phonenumber, name, role },
+        {
+          userid: h.rows[0].userid,
+          email,
+          phonenumber,
+          name,
+          role,
+          restaurantname,
+          restaurantid,
+        },
         process.env.AUTH_SECRET,
         {
           expiresIn: 12 * 60,

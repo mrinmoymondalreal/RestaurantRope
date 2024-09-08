@@ -2,6 +2,7 @@ import { Router } from "express";
 import authRouter from "./auth.js";
 import restaurantsRouter from "./restaurant.js";
 import orderRouter from "./order.js";
+import managerRouter from "./manager.js";
 
 const router = Router();
 
@@ -14,4 +15,5 @@ export default [
   { name: "/auth", router: authRouter },
   { name: "/restaurants", router: restaurantsRouter },
   { name: "/order", router: orderRouter },
+  { name: "/manager", router: managerRouter },
 ];
