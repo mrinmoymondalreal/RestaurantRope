@@ -1,0 +1,48 @@
+.animate {
+  visibility: hidden;
+  animation: rise-down 2s ease-in;
+  /* position: absolute; */
+}
+
+@keyframes rise-down {
+  0%,
+  100% {
+    visibility: visible;
+    transform: translateY(-200%);
+    opacity: 0.2;
+  }
+  30%,
+  70% {
+    visibility: visible;
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.animate-2 {
+  visibility: visible;
+  animation:
+    hidden 1.7s linear,
+    rise-up 0.5s ease-out 1.7s;
+  /* position: absolute; */
+}
+
+@keyframes hidden {
+  0%,
+  100% {
+    visibility: hidden;
+  }
+}
+
+@keyframes rise-up {
+  0% {
+    visibility: visible;
+    transform: translateY(200%);
+    opacity: 0.2;
+  }
+  100% {
+    visibility: visible;
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
