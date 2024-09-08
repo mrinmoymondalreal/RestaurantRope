@@ -1,6 +1,5 @@
-import { LucideArrowLeft, Minus, Plus } from "lucide-react";
-import { useState } from "react";
-import { Separator } from "./components/ui/separator";
+import { LucideArrowLeft } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,

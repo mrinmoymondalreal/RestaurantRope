@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import React, { Suspense, useEffect, useState } from "react";
-import { cart } from "./lib/states";
+import { cart } from "../lib/states";
 import { useAtom, useSetAtom } from "jotai";
 import Confetti from "react-confetti";
 import { Link, useParams } from "react-router-dom";

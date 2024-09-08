@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Confetti from "react-confetti";
 import { Link } from "react-router-dom";
-import "./App.css";
+import "../App.css";
 import { useQuery } from "@tanstack/react-query";
 
 function Card({ name, restaurantid, photo, rating, city, lowest_price }) {

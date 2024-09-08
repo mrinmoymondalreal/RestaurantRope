@@ -1,12 +1,12 @@
 import { LucideArrowLeft, Minus, Plus } from "lucide-react";
 import { useState } from "react";
-import { Separator } from "./components/ui/separator";
-import { Button } from "./components/ui/button";
+import { useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
-import { useAtom, useSetAtom } from "jotai";
-import { cart } from "./lib/states";
-import preparing from "./assets/Preparing Order.gif";
 import { Link } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { cart } from "../lib/states";
+import preparing from "../assets/Preparing Order.gif";
 
 function Item({ initQuantity, name, id, price, restaurantId, imageurl }) {
   const [quantity, _setQuantity] = useState(initQuantity);

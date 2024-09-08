@@ -105,7 +105,7 @@ router.get(
 
 router.get("/list", verifyUser("Customer", re("/")), async (req, res) => {
   let order_details = await client.query(
-    "SELECT orders.*, restaurants.name FROM orders JOIN restaurants ON restaurants.restaurantid = orders.restaurantid WHERE userid = $1",
+    "SELECT orders.*, restaurants.name FROM orders JOIN restaurants ON restaurants.restaurantid = orders.restaurantid WHERE userid = $1 AND orderstatus = 'Pending'",
     [res.locals.user.userid]
   );
 

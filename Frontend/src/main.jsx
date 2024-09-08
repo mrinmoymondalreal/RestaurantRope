@@ -1,15 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "./index.css";
-import App from "./App";
-import Restaurant from "./Restaurant";
-import Cart from "./Cart";
-import Order from "./Order";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Login from "./Login";
-import Signup from "./Signup";
+import "./index.css";
+
+import App from "./customer/App";
+import Restaurant from "./customer/Restaurant";
+import Cart from "./customer/Cart";
+import Order from "./customer/Order";
+import Login from "./customer/Login";
+import Signup from "./customer/Signup";
 
 const router = createBrowserRouter([
   {
