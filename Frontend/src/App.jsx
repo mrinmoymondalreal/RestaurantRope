@@ -6,6 +6,7 @@ import {
   LogOut,
   Search,
   ShoppingBag,
+  ShoppingCart,
   Star,
   UserCircle,
 } from "lucide-react";
@@ -123,9 +124,12 @@ function App() {
             ) : (
               <>
                 <Link to="/cart">
-                  <ShoppingBag />
+                  <ShoppingCart />
                 </Link>
                 <UserCircle />
+                <Link to="/orders">
+                  <ShoppingBag />
+                </Link>
                 <Link to="/logout">
                   <LogOut />
                 </Link>

@@ -25,7 +25,7 @@ async function getCart() {
   return resp;
 }
 
-function DishCard({ name, id, description, price, image, initQuantity }) {
+function DishCard({ name, id, description, price, imageurl, initQuantity }) {
   let [_cart, setCart] = useAtom(cart);
 
   let f = _cart.find((e) => e.id == id);
@@ -61,13 +61,19 @@ function DishCard({ name, id, description, price, image, initQuantity }) {
       <div className="rounded-md flex">
         <div className="flex-[4] flex flex-col md:space-y-1">
           <div className="name font-bold text-xl">{name}</div>
-          <div className="price text-lg">$ {price}</div>
+          <div className="price text-lg">₹ {price}</div>
           <div className="description text-sm text-gray-400 pr-2">
             {description}
           </div>
         </div>
         <div className="image relative flex justify-center items-center">
-          <div className="w-[156px] h-[144px] bg-gray-500 rounded-lg relative">
+          <div
+            className="w-[156px] h-[144px] bg-gray-500 rounded-lg relative"
+            style={{
+              backgroundImage: `url("${imageurl}")`,
+              backgroundSize: "cover",
+            }}
+          >
             <div className="absolute w-[80%] bottom-0 bg-white left-1/2 -translate-x-1/2 translate-y-1 py-2 rounded-md shadow-md font-bold uppercase flex px-4 justify-center">
               {quantity == 0 ? (
                 <button type="button" onClick={() => setQuantity(() => 1)}>

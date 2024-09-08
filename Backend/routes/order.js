@@ -16,9 +16,10 @@ router.get(
     );
 
     if (result.rows.length == 0) {
-      await client.query("DELETE FROM orders WHERE userid = $1", [
-        res.locals.user.userid,
-      ]);
+      await client.query(
+        "DELETE FROM orders WHERE userid = $1 AND OrderStatus = 'Pending'",
+        [res.locals.user.userid]
+      );
       result = await client.query(
         "INSERT INTO orders(userid, restaurantid, totalamount) VALUES ($1, $2, 0) RETURNING orderid",
         [res.locals.user.userid, restaurantid]
@@ -121,6 +122,19 @@ router.get("/list", verifyUser("Customer", re("/")), async (req, res) => {
     };
 
     res.send(resp);
+  } else {
+    res.status(404).send(null);
+  }
+});
+
+router.get("/orders", verifyUser("Customer", re("/")), async (req, res) => {
+  let order_details = await client.query(
+    "SELECT orders.*, restaurants.name, restaurants.photos FROM orders JOIN restaurants ON restaurants.restaurantid = orders.restaurantid WHERE userid = $1 AND OrderStatus != 'Pending'",
+    [res.locals.user.userid]
+  );
+
+  if (order_details.rows.length > 0) {
+    res.send(order_details.rows);
   } else {
     res.status(404).send(null);
   }

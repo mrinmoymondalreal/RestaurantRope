@@ -1,12 +1,17 @@
 import { LucideArrowLeft, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { Separator } from "./components/ui/separator";
+import { Button } from "./components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { cart } from "./lib/states";
+import preparing from "./assets/Preparing Order.gif";
+import { Link } from "react-router-dom";
 
-function Item({ initQuantity, name, id, price, restaurantId }) {
+function Item({ initQuantity, name, id, price, restaurantId, imageurl }) {
   const [quantity, _setQuantity] = useState(initQuantity);
+
+  let [__c, setCart] = useAtom(cart);
 
   function setQuantity(_v) {
     fetch(
@@ -15,13 +20,25 @@ function Item({ initQuantity, name, id, price, restaurantId }) {
         credentials: "include",
       },
     );
+    setCart((c) => {
+      for (let i in c) {
+        if (c[i].id == id) c[i].quantity = _v(quantity);
+      }
+      return c;
+    });
     _setQuantity(_v);
   }
 
   return (
     <div className="item flex items-center">
       <div className="">
-        <div className="image bg-gray-600 w-20 rounded-md aspect-square"></div>
+        <div
+          className="image bg-gray-600 w-20 rounded-md aspect-square"
+          style={{
+            backgroundImage: `url("${imageurl}")`,
+            backgroundSize: "cover",
+          }}
+        ></div>
       </div>
       <div className="name flex-1 box-border px-4 space-y-2">
         <div className="text-lg font-bold">
@@ -37,7 +54,7 @@ function Item({ initQuantity, name, id, price, restaurantId }) {
           </button>
         </div>
       </div>
-      <div className="price">$ {price * quantity}</div>
+      <div className="price">₹ {price * quantity}</div>
     </div>
   );
 }
@@ -66,6 +83,7 @@ export default function Cart() {
             price: e.price,
             quantity: e.quantity,
             restaurantId: resp.restaurantid,
+            imageurl: e.imageurl,
           })),
         );
       }
@@ -74,65 +92,94 @@ export default function Cart() {
     },
   });
 
-  console.log(cartlist);
+  let [isActive, setActive] = useState(false);
 
   return (
-    <div className="w-full flex justify-center bg-gray-200 min-h-screen">
-      <div className="wrapper w-full max-w-7xl flex justify-center relative">
-        <header className="fixed left-0 px-6 py-4 flex items-center gap-x-6">
-          <LucideArrowLeft size={30} onClick={() => window.history.back()} />
-          <div className="font-bold text-xl">{cartlist && cartlist.name}</div>
-        </header>
-        <div className="billWrapper px-6 py-20 md:px-12 w-full max-w-2xl min-h-screen bg-white">
-          <div className="items space-y-6">
-            {_cart.map((props, index) => (
-              <Item
-                {...{ ...props, initQuantity: props.quantity }}
-                key={index}
-              />
-            ))}
+    <>
+      {isActive && (
+        <div className="fixed w-full min-h-screen flex flex-col justify-center items-center bg-white z-[100]">
+          <img src={preparing} className="max-w-full w-64" alt="" />
+          <div className="text-2xl font-bold -translate-y-10">
+            Your Food is Preparing !!
           </div>
-          <div className="pt-6">
-            <h1 className="text-xl font-bold">Bill Details</h1>
-            <table className="w-full mt-2">
-              <tr>
-                <td>Items Total</td>
-                <td className="text-right">
-                  {cartlist && cartlist.totalamount}
-                </td>
-              </tr>
-              <tr>
-                <td>GST and Restaurant Changes</td>
-                <td className="text-right">
-                  {cartlist && cartlist.totalamount * 0.18}
-                </td>
-              </tr>
-              <tr>
-                <td>Platform fee</td>
-                <td className="text-right">{10}</td>
-              </tr>
-              <tr>
-                <td>
-                  <div className="w-full h-px bg-black"></div>
-                </td>
-                <td className="py-2">
-                  <div className="w-full h-px bg-black"></div>
-                </td>
-              </tr>
-              <tr>
-                <th className="text-left">To Pay</th>
-                <th className="text-right">
-                  {cartlist && cartlist.totalamount * 1.18 + 10}
-                </th>
-              </tr>
-            </table>
+          <div className="text-gray-600 -translate-y-6">
+            We will notify you once it is done
           </div>
+          <Link to="/">
+            <Button>Go Home</Button>
+          </Link>
+        </div>
+      )}
+      <div className="w-full flex justify-center bg-gray-200 min-h-screen">
+        <div className="wrapper w-full max-w-7xl flex justify-center relative">
+          <header className="fixed left-0 px-6 py-4 flex items-center gap-x-6">
+            <LucideArrowLeft size={30} onClick={() => window.history.back()} />
+            <div className="font-bold text-xl">{cartlist && cartlist.name}</div>
+          </header>
+          <div className="billWrapper px-6 py-20 md:px-12 w-full max-w-2xl min-h-screen bg-white">
+            <div className="items space-y-6">
+              {_cart.map((props, index) => (
+                <Item
+                  {...{ ...props, initQuantity: props.quantity }}
+                  key={index}
+                />
+              ))}
+            </div>
+            <div className="pt-6">
+              <h1 className="text-xl font-bold">Bill Details</h1>
+              <table className="w-full mt-2">
+                <tr>
+                  <td>Items Total</td>
+                  <td className="text-right">
+                    ₹ {_cart.reduce((a, c) => a + c.price * c.quantity, 0)}
+                  </td>
+                </tr>
+                <tr>
+                  <td>GST and Restaurant Changes</td>
+                  <td className="text-right">
+                    ₹ {cartlist && cartlist.totalamount * 0.18}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Platform fee</td>
+                  <td className="text-right">₹ {10}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <div className="w-full h-px bg-black"></div>
+                  </td>
+                  <td className="py-2">
+                    <div className="w-full h-px bg-black"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="text-left">To Pay</th>
+                  <th className="text-right">
+                    ₹ {cartlist && cartlist.totalamount * 1.18 + 10}
+                  </th>
+                </tr>
+              </table>
+            </div>
 
-          <div className="fixed bg-gray-500 bottom-0 mb-4 left-1/2 -translate-x-1/2 b px-5 py-4 rounded-md text-white ">
-            Checkout
+            <div className="fixed bottom-0 mb-4 left-1/2 -translate-x-1/2">
+              <Button
+                size={"lg"}
+                onClick={async () => {
+                  let resp = await fetch(
+                    "http://192.168.0.103:3000/order/now/" + cartlist.orderid,
+                    { credentials: "include" },
+                  );
+                  if (resp.ok) {
+                    setActive(true);
+                  }
+                }}
+              >
+                Checkout
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
