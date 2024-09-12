@@ -17,7 +17,6 @@ router.get("/orders/list", verifyUser("Manager", re("/")), async (req, res) => {
   if (order_details.rows.length > 0) {
     let resp = [];
     for (let i in order_details.rows) {
-      console.log(i);
       let orderid = order_details.rows[i].orderid;
       let item_list = await client.query(
         "SELECT orderitems.quantity, orderitems.price, dishes.name FROM orderitems JOIN dishes ON dishes.dishid = orderitems.dishid WHERE orderid = $1",

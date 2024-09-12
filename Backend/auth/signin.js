@@ -83,6 +83,7 @@ export function verifyUser(role, callback) {
       } else return callback(req, res);
     } catch (err) {
       console.log(err);
+      return callback(req, res);
     }
     next();
   };

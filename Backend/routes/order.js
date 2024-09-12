@@ -129,7 +129,7 @@ router.get("/list", verifyUser("Customer", re("/")), async (req, res) => {
 
 router.get("/orders", verifyUser("Customer", re("/")), async (req, res) => {
   let order_details = await client.query(
-    "SELECT orders.*, restaurants.name, restaurants.photos FROM orders JOIN restaurants ON restaurants.restaurantid = orders.restaurantid WHERE userid = $1 AND OrderStatus != 'Pending'",
+    "SELECT orders.*, restaurants.name, restaurants.photos FROM orders JOIN restaurants ON restaurants.restaurantid = orders.restaurantid WHERE userid = $1 AND OrderStatus != 'Pending' ORDER BY createdat DESC",
     [res.locals.user.userid]
   );
 
