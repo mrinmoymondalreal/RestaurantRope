@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { cart } from "../lib/states";
-import preparing from "../assets/Preparing Order.gif";
+import preparing from "../../public/order preparing.gif";
 
 function Item({ initQuantity, name, id, price, restaurantId, imageurl }) {
   const [quantity, _setQuantity] = useState(initQuantity);
@@ -99,13 +99,11 @@ export default function Cart() {
       {isActive && (
         <div className="fixed w-full min-h-screen flex flex-col justify-center items-center bg-white z-[100]">
           <img src={preparing} className="max-w-full w-64" alt="" />
-          <div className="text-2xl font-bold -translate-y-10">
-            Your Food is Preparing !!
-          </div>
-          <div className="text-gray-600 -translate-y-6">
+          <div className="text-2xl font-bold ">Your Food is Preparing !!</div>
+          <div className="text-gray-600">
             We will notify you once it is done
           </div>
-          <Link to="/">
+          <Link to="/" className="mt-6">
             <Button>Go Home</Button>
           </Link>
         </div>
@@ -137,7 +135,7 @@ export default function Cart() {
                 <tr>
                   <td>GST and Restaurant Changes</td>
                   <td className="text-right">
-                    ₹ {cartlist && cartlist.totalamount * 0.18}
+                    ₹ {cartlist && Math.floor(cartlist.totalamount * 0.18)}
                   </td>
                 </tr>
                 <tr>
@@ -155,7 +153,7 @@ export default function Cart() {
                 <tr>
                   <th className="text-left">To Pay</th>
                   <th className="text-right">
-                    ₹ {cartlist && cartlist.totalamount * 1.18 + 10}
+                    ₹ {cartlist && Math.floor(cartlist.totalamount * 1.18) + 10}
                   </th>
                 </tr>
               </table>

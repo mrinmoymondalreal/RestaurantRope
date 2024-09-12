@@ -32,7 +32,7 @@ function Order({ name, createdat, totalamount, photos, orderstatus }) {
         <div className="name flex-1 box-border px-4 ">
           <div className="text-lg font-bold">Order to {name}</div>
           <div className="text-gray-500">
-            on {new Date(createdat).toLocaleDateString()}{" "}
+            on {new Date(createdat).toLocaleDateString("en-in")}{" "}
             <a href="#" className="underline block md:inline-block md:ml-4">
               View Details
             </a>
@@ -48,7 +48,7 @@ function Order({ name, createdat, totalamount, photos, orderstatus }) {
         </div>
         <div className="price">
           <div className="font-bold">Total: </div>
-          <div>₹ {Number(totalamount) * 1.18 + 10}</div>
+          <div>₹ {Math.floor(Number(totalamount) * 1.18 + 10)}</div>
         </div>
       </div>
       <Separator />

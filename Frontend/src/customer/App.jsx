@@ -1,6 +1,7 @@
 import {
   BaggageClaim,
   ChevronDown,
+  Dot,
   ListFilter,
   LocateFixed,
   LogOut,
@@ -14,6 +15,8 @@ import Confetti from "react-confetti";
 import { Link } from "react-router-dom";
 import "../App.css";
 import { useQuery } from "@tanstack/react-query";
+import dealsImage from "../../public/deals.png";
+import { useState } from "react";
 
 function Card({ name, restaurantid, photo, rating, city, lowest_price }) {
   return (
@@ -43,6 +46,79 @@ function Card({ name, restaurantid, photo, rating, city, lowest_price }) {
         </div>
       </div>
     </Link>
+  );
+}
+function SearchForm({ className }) {
+  const [enabled, setEnable] = useState(false);
+  const [result, setResult] = useState([]);
+
+  let timeout;
+
+  function handleInput(e) {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(sendData, 500);
+    async function sendData() {
+      if (e.target.value.trim() != "") {
+        let _r = await (
+          await fetch(
+            "http://192.168.0.103:3000/restaurants/list?name=" +
+              e.target.value.toLowerCase(),
+          )
+        ).json();
+        setResult(_r);
+      }
+    }
+
+    if (e.target.value.trim() != "") {
+      setEnable(true);
+    } else setEnable(false);
+  }
+
+  return (
+    <form
+      action="/"
+      className={
+        "flex flex-col flex-[2] relative w-full shadow-md " + className
+      }
+    >
+      <div className="flex flex-1 items-center w-full">
+        <Search className="absolute ml-4 text-[#919196]" color="currentColor" />
+        <input
+          type="text"
+          className="w-full pl-[3.5rem] py-4 rounded-md border border-gray-200 px-4 placeholder:tracking-wide outline-none"
+          placeholder="Search for restaurants.."
+          onChange={handleInput}
+        />
+      </div>
+      {enabled && (
+        <div className="animate-in overflow-y-auto absolute max-h-[calc(100vh-200px)] w-full min-h-48 top-full bg-white translate-y-2 rounded-md space-y-4 py-2 z-[100] shadow-md">
+          {result &&
+            result.map((e) => (
+              <Link
+                key={e.restaurantid}
+                to={`/restaurant/${e.restaurantid}`}
+                className="flex gap-x-4 hover:bg-gray-300 px-3 py-2"
+              >
+                <div className="image flex-grow w-24 aspect-square overflow-hidden rounded-md">
+                  <img className="max-w-full h-full" src={e.photos[0]} alt="" />
+                </div>
+                <div className="w-[calc(100%-6rem)] flex flex-col justify-center">
+                  <div className="font-bold">{e.name}</div>
+                  <div className="flex">
+                    <div className="rating flex gap-x-2 items-center">
+                      <Star size={15} className="text-green-500" /> 3.4
+                    </div>
+                    <div className="flex">
+                      <Dot /> {e.city}
+                    </div>
+                  </div>
+                  <div>{e.address}</div>
+                </div>
+              </Link>
+            ))}
+        </div>
+      )}
+    </form>
   );
 }
 
@@ -75,32 +151,18 @@ function App() {
     },
   });
 
-  console.log(user);
-
   return (
     <>
       <header className="w-full flex flex-col items-center box-border py-4 md:py-8 px-6 md:px-12 gap-y-4 bg-green-500">
         <div className="wrapper items-center flex w-full max-w-7xl">
           <div className="flex gap-x-2 items-center flex-1 text-white">
             <LocateFixed size={30} className="text-white" />
-            <div>Location</div>
+            <div>Kolkata</div>
             <button type="button" className="hover:bg-gray-600/20 rounded-md">
               <ChevronDown />
             </button>
           </div>
-          <form action="/" className="flex-[2] px-6 lg:block hidden">
-            <div className="flex items-center w-full">
-              <Search
-                className="absolute ml-4 text-[#919196]"
-                color="currentColor"
-              />
-              <input
-                type="text"
-                className="w-full pl-[3.5rem] py-4 rounded-md shadow-md border border-gray-200 px-4 placeholder:tracking-wide outline-none"
-                placeholder="Search for restaurants.."
-              />
-            </div>
-          </form>
+          <SearchForm className="lg:block hidden" />
           <div className="flex-1 flex justify-end text-white gap-x-6">
             {!user ? (
               <>
@@ -137,7 +199,8 @@ function App() {
             )}
           </div>
         </div>
-        <form action="/" className="w-full flex-2 lg:hidden">
+        <SearchForm className="lg:hidden" />
+        {/* <form action="/" className="w-full flex-[2] lg:hidden">
           <div className="flex items-center w-full">
             <Search
               className="absolute ml-4 text-[#919196]"
@@ -149,7 +212,7 @@ function App() {
               placeholder="Search for restaurants.."
             />
           </div>
-        </form>
+        </form> */}
       </header>
 
       <section className="bg-green-500 w-full h-48 flex justify-center py-4 shadow-md">
@@ -165,8 +228,8 @@ function App() {
                 <br /> Discount & More
               </div>
             </div>
-            <div className="img lg:px-24">
-              <div className="wrapp bg-gray-500 rounded-md w-20 h-20"></div>
+            <div className="img">
+              <img src={dealsImage} alt="" className="-mt-6 max-w-full w-48" />
             </div>
           </div>
         </div>

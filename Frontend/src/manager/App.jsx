@@ -26,7 +26,7 @@ function Order({ name, list, person_name, totalamount, orderid }) {
     <div className="order min-w-full rounded-md cursor-pointer space-y-2 border border-black px-4 py-6 ">
       <div className="text-lg font-bold">Order #{orderid}</div>
       <div>Order from {person_name}</div>
-      <div>Total Amount: ₹ {totalamount}</div>
+      <div>Total Amount: ₹ {Math.floor(totalamount * 1.18) + 10}</div>
       <Accordion type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>Dishes Ordered</AccordionTrigger>
@@ -128,6 +128,7 @@ export default function ManagerPage() {
             {data.orders.map((props) => (
               <Order {...props} key={props.orderid} />
             ))}
+            {data.orders.length <= 0 && "No orders avialable"}
           </div>
         </div>
       </div>
