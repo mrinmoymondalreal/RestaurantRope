@@ -17,7 +17,7 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 async function getCart() {
-  let resp = await fetch("http://192.168.0.103:3000/order/list", {
+  let resp = await fetch(`${import.meta.env.VITE_NAME_URL}/order/list`, {
     credentials: "include",
   });
   resp = await resp.json();
@@ -49,7 +49,7 @@ function DishCard({ name, id, description, price, imageurl, initQuantity }) {
 
     _setQuantity(_v);
     fetch(
-      `http://192.168.0.103:3000/order/add/restaurant/${restaurantId}/dish/${id}/q/${_v(quantity)}`,
+      `${import.meta.env.VITE_NAME_URL}/order/add/restaurant/${restaurantId}/dish/${id}/q/${_v(quantity)}`,
       {
         credentials: "include",
       },
@@ -174,7 +174,9 @@ function DishContainer() {
     queryKey: ["dishes-list"],
     queryFn: async () => {
       return await (
-        await fetch(`http://192.168.0.103:3000/restaurants/${id}/dishes/list`)
+        await fetch(
+          `${import.meta.env.VITE_NAME_URL}/restaurants/${id}/dishes/list`,
+        )
       ).json();
     },
   });
@@ -276,7 +278,7 @@ export default function Restaurant() {
     queryKey: ["restaurants-info"],
     queryFn: async () => {
       return await (
-        await fetch("http://192.168.0.103:3000/restaurants/list/" + id)
+        await fetch(`${import.meta.env.VITE_NAME_URL}/restaurants/list/` + id)
       ).json();
     },
   });

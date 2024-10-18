@@ -45,7 +45,7 @@ function Order({ name, list, person_name, totalamount, orderid }) {
         <Button
           onClick={async () => {
             await fetch(
-              "http://192.168.0.103:3000/manager/order/done/" + orderid,
+              `${import.meta.env.VITE_NAME_URL}/manager/order/done/` + orderid,
               {
                 credentials: "include",
               },
@@ -73,7 +73,7 @@ function Order({ name, list, person_name, totalamount, orderid }) {
                 <AlertDialogAction
                   onClick={async () => {
                     await fetch(
-                      "http://192.168.0.103:3000/manager/order/cancel/" +
+                      `${import.meta.env.VITE_NAME_URL}/manager/order/cancel/` +
                         orderid,
                       {
                         credentials: "include",
@@ -96,12 +96,15 @@ function Order({ name, list, person_name, totalamount, orderid }) {
 export default function ManagerPage() {
   const { data, isLoading, error } = useQuery({
     queryFn: async () => {
-      let g = await fetch("http://192.168.0.103:3000/manager/details", {
+      let g = await fetch(`${import.meta.env.VITE_NAME_URL}/manager/details`, {
         credentials: "include",
       });
-      let g2 = await fetch("http://192.168.0.103:3000/manager/orders/list", {
-        credentials: "include",
-      });
+      let g2 = await fetch(
+        `${import.meta.env.VITE_NAME_URL}/manager/orders/list`,
+        {
+          credentials: "include",
+        },
+      );
       g = await g.json();
       g2 = await g2.json();
       return {

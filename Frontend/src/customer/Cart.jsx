@@ -15,7 +15,7 @@ function Item({ initQuantity, name, id, price, restaurantId, imageurl }) {
 
   function setQuantity(_v) {
     fetch(
-      `http://192.168.0.103:3000/order/add/restaurant/${restaurantId}/dish/${id}/q/${_v(quantity)}`,
+      `${import.meta.env.VITE_NAME_URL}/order/add/restaurant/${restaurantId}/dish/${id}/q/${_v(quantity)}`,
       {
         credentials: "include",
       },
@@ -70,7 +70,7 @@ export default function Cart() {
     queryKey: ["cart-list-2"],
     queryFn: async () => {
       let resp = await (
-        await fetch("http://192.168.0.103:3000/order/list", {
+        await fetch(`${import.meta.env.VITE_NAME_URL}/order/list`, {
           credentials: "include",
         })
       ).json();
@@ -164,7 +164,8 @@ export default function Cart() {
                 size={"lg"}
                 onClick={async () => {
                   let resp = await fetch(
-                    "http://192.168.0.103:3000/order/now/" + cartlist.orderid,
+                    `${import.meta.env.VITE_NAME_URL}/order/now/` +
+                      cartlist.orderid,
                     { credentials: "include" },
                   );
                   if (resp.ok) {

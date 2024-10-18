@@ -61,7 +61,7 @@ function SearchForm({ className }) {
       if (e.target.value.trim() != "") {
         let _r = await (
           await fetch(
-            "http://192.168.0.103:3000/restaurants/list?name=" +
+            `${import.meta.env.VITE_NAME_URL}/restaurants/list?name=` +
               e.target.value.toLowerCase(),
           )
         ).json();
@@ -131,7 +131,7 @@ function App() {
     queryKey: ["restaurants-list"],
     queryFn: async () => {
       return await (
-        await fetch("http://192.168.0.103:3000/restaurants/list")
+        await fetch(`${import.meta.env.VITE_NAME_URL}/restaurants/list`)
       ).json();
     },
   });
@@ -144,7 +144,7 @@ function App() {
     queryKey: ["user"],
     queryFn: async () => {
       return await (
-        await fetch("http://192.168.0.103:3000/auth/get_user", {
+        await fetch(`${import.meta.env.VITE_NAME_URL}/auth/get_user`, {
           credentials: "include",
         })
       ).json();
@@ -259,6 +259,42 @@ function App() {
           </div>
         </div>
       </section>
+      <footer className="w-full px-6 py-4 bg-[#262626] flex flex-col items-center text-white">
+        <div>This website is designed and created by Mrinmoy Mondal</div>
+        <div>
+          [
+          <a
+            className="underline text-blue-500"
+            href="https://github.com/mrinmoymondalreal"
+          >
+            Github
+          </a>
+          ] [
+          <a
+            className="underline text-blue-500"
+            href="https://www.linkedin.com/in/mrinmoy-mondal-319861167/"
+          >
+            Linkedin
+          </a>
+          ] [
+          <a
+            className="underline text-blue-500"
+            href="https://mrinmoymondalreal.github.io/Portfolio/"
+          >
+            Portfolio
+          </a>
+          ]
+        </div>
+        <div>
+          If you want more detail about the website check the github page{" "}
+          <a
+            className="underline text-blue-500"
+            href="https://github.com/mrinmoymondalreal/RestaurantRope"
+          >
+            here
+          </a>
+        </div>
+      </footer>
     </>
   );
 }

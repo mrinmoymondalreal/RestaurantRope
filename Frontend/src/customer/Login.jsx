@@ -12,7 +12,7 @@ export default function Login() {
         <div className="text-red-600">{error}</div>
         <form
           method="POST"
-          action="http://192.168.0.103:3000/auth/login?redirect=http://192.168.0.103:5173/"
+          action={`${import.meta.env.VITE_NAME_URL}/auth/login?redirect=${import.meta.env.VITE_NAME_URL}`}
           className="w-full max-w-sm relative space-y-4 flex flex-col items-center"
         >
           <Input type="email" placeholder="Email" name="email" required />

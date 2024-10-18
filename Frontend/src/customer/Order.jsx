@@ -65,7 +65,7 @@ export default function Orders() {
     queryKey: ["order-list"],
     queryFn: async () => {
       return await (
-        await fetch("http://192.168.0.103:3000/order/orders", {
+        await fetch(`${import.meta.env.VITE_NAME_URL}/order/orders`, {
           credentials: "include",
         })
       ).json();
