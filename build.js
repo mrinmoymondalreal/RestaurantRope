@@ -3,9 +3,7 @@ const exec = util.promisify(require("child_process").exec);
 const fs = require("fs");
 
 async function ls() {
-  const { stdout, stderr } = await exec(
-    "cd ./Frontend && pnpm install && pnpm run build"
-  );
+  const { stdout, stderr } = await exec("cd ./Frontend && pnpm run build");
   console.log("stdout:", stdout);
   console.log("stderr:", stderr);
   // const stderr = "";
