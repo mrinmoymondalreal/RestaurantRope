@@ -19,8 +19,6 @@ async function ls() {
     process.exit(1);
   }
 
-  {
-    process.exit(0);
-  }
+  process.exit(0);
 }
 ls();
