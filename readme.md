@@ -2,6 +2,10 @@
 
 A web application for quick and easy restaurant order management. Users can browse restaurants, view menus, and place orders for takeaway, while restaurant owners can efficiently manage incoming orders through a dedicated admin panel.
 
+Demo: [https://restaurantrope.onrender.com/]('https://restaurantrope.onrender.com/')
+
+(Deployed on Free Tier delay in loading expected)
+
 ## Table of Contents
 
 - [Features](#features)
